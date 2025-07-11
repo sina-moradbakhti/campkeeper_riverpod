@@ -25,16 +25,16 @@ class CampsiteModel extends Campsite {
   factory CampsiteModel.fromJson(Map<String, dynamic> json) {
     final geoLocationData = json['geoLocation'] as Map<String, dynamic>?;
     GeoLocationModel geoLocation;
-    
+
     if (geoLocationData != null) {
       double lat = (geoLocationData['lat'] as num?)?.toDouble() ?? 0.0;
       double lng = (geoLocationData['long'] as num?)?.toDouble() ?? 0.0;
-      
+
       if (lat < -90 || lat > 90 || lng < -180 || lng > 180) {
         lat = 45.0 + (math.Random().nextDouble() * 20.0);
         lng = -10.0 + (math.Random().nextDouble() * 40.0);
       }
-      
+
       geoLocation = GeoLocationModel(lat: lat, long: lng);
     } else {
       final random = math.Random();
@@ -45,10 +45,12 @@ class CampsiteModel extends Campsite {
     }
 
     final hostLanguagesData = json['hostLanguages'] as List<dynamic>?;
-    final hostLanguages = hostLanguagesData?.map((e) => e.toString()).toList() ?? <String>[];
+    final hostLanguages =
+        hostLanguagesData?.map((e) => e.toString()).toList() ?? <String>[];
 
     final suitableForData = json['suitableFor'] as List<dynamic>?;
-    final suitableFor = suitableForData?.map((e) => e.toString()).toList() ?? <String>[];
+    final suitableFor =
+        suitableForData?.map((e) => e.toString()).toList() ?? <String>[];
 
     final createdAtString = json['createdAt']?.toString() ?? '';
     DateTime createdAt;

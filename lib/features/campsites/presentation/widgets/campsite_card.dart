@@ -27,9 +27,9 @@ class CampsiteCard extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            
             ClipRRect(
-              borderRadius: const BorderRadius.vertical(top: Radius.circular(12)),
+              borderRadius:
+                  const BorderRadius.vertical(top: Radius.circular(12)),
               child: AspectRatio(
                 aspectRatio: 16 / 9,
                 child: CachedNetworkImage(
@@ -52,23 +52,21 @@ class CampsiteCard extends StatelessWidget {
                 ),
               ),
             ),
-            
-            
             Padding(
               padding: const EdgeInsets.all(16),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  
                   Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
                         child: Text(
                           campsite.label,
-                          style: Theme.of(context).textTheme.titleLarge?.copyWith(
-                            fontWeight: FontWeight.bold,
-                          ),
+                          style:
+                              Theme.of(context).textTheme.titleLarge?.copyWith(
+                                    fontWeight: FontWeight.bold,
+                                  ),
                           maxLines: 2,
                           overflow: TextOverflow.ellipsis,
                         ),
@@ -87,16 +85,15 @@ class CampsiteCard extends StatelessWidget {
                           '${PriceFormatter.formatEuro(campsite.pricePerNight)}/night',
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
-                            color: Theme.of(context).colorScheme.onPrimaryContainer,
+                            color: Theme.of(context)
+                                .colorScheme
+                                .onPrimaryContainer,
                           ),
                         ),
                       ),
                     ],
                   ),
-                  
                   const SizedBox(height: 8),
-                  
-                  
                   Row(
                     children: [
                       Icon(
@@ -117,10 +114,7 @@ class CampsiteCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  
                   const SizedBox(height: 12),
-                  
-                  
                   Row(
                     children: [
                       _buildFeatureChip(

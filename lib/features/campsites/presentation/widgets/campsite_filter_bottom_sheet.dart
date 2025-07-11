@@ -7,10 +7,12 @@ class CampsiteFilterBottomSheet extends ConsumerStatefulWidget {
   const CampsiteFilterBottomSheet({super.key});
 
   @override
-  ConsumerState<CampsiteFilterBottomSheet> createState() => _CampsiteFilterBottomSheetState();
+  ConsumerState<CampsiteFilterBottomSheet> createState() =>
+      _CampsiteFilterBottomSheetState();
 }
 
-class _CampsiteFilterBottomSheetState extends ConsumerState<CampsiteFilterBottomSheet> {
+class _CampsiteFilterBottomSheetState
+    extends ConsumerState<CampsiteFilterBottomSheet> {
   late CampsiteFilter _currentFilter;
   late RangeValues _priceRange;
 
@@ -41,7 +43,6 @@ class _CampsiteFilterBottomSheetState extends ConsumerState<CampsiteFilterBottom
           ),
           child: Column(
             children: [
-              
               Container(
                 width: 40,
                 height: 4,
@@ -51,17 +52,16 @@ class _CampsiteFilterBottomSheetState extends ConsumerState<CampsiteFilterBottom
                   borderRadius: BorderRadius.circular(2),
                 ),
               ),
-              
-              
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 24),
                 child: Row(
                   children: [
                     Text(
                       'Filter Campsites',
-                      style: Theme.of(context).textTheme.headlineSmall?.copyWith(
-                        fontWeight: FontWeight.bold,
-                      ),
+                      style:
+                          Theme.of(context).textTheme.headlineSmall?.copyWith(
+                                fontWeight: FontWeight.bold,
+                              ),
                     ),
                     const Spacer(),
                     TextButton(
@@ -71,16 +71,12 @@ class _CampsiteFilterBottomSheetState extends ConsumerState<CampsiteFilterBottom
                   ],
                 ),
               ),
-              
               const Divider(),
-              
-              
               Expanded(
                 child: ListView(
                   controller: scrollController,
                   padding: const EdgeInsets.symmetric(horizontal: 24),
                   children: [
-                    
                     if (filterState.availableLanguages.isNotEmpty) ...[
                       _buildSectionTitle('Host Language'),
                       _buildDropdownFilter(
@@ -89,19 +85,19 @@ class _CampsiteFilterBottomSheetState extends ConsumerState<CampsiteFilterBottom
                         hint: 'Select language',
                         onChanged: (value) {
                           setState(() {
-                            _currentFilter = _currentFilter.copyWith(hostLanguage: value);
+                            _currentFilter =
+                                _currentFilter.copyWith(hostLanguage: value);
                           });
                         },
                         onClear: () {
                           setState(() {
-                            _currentFilter = _currentFilter.clearFilter(clearHostLanguage: true);
+                            _currentFilter = _currentFilter.clearFilter(
+                                clearHostLanguage: true);
                           });
                         },
                       ),
                       const SizedBox(height: 24),
                     ],
-                    
-                    
                     _buildSectionTitle('Price Range (€ per night)'),
                     const SizedBox(height: 8),
                     RangeSlider(
@@ -127,12 +123,10 @@ class _CampsiteFilterBottomSheetState extends ConsumerState<CampsiteFilterBottom
                       '€${_priceRange.start.round()} - €${_priceRange.end.round()}',
                       textAlign: TextAlign.center,
                       style: Theme.of(context).textTheme.bodyMedium?.copyWith(
-                        fontWeight: FontWeight.w500,
-                      ),
+                            fontWeight: FontWeight.w500,
+                          ),
                     ),
                     const SizedBox(height: 24),
-                    
-                    
                     _buildSectionTitle('Amenities'),
                     const SizedBox(height: 8),
                     _buildSwitchTile(
@@ -141,7 +135,8 @@ class _CampsiteFilterBottomSheetState extends ConsumerState<CampsiteFilterBottom
                       value: _currentFilter.isCloseToWater,
                       onChanged: (value) {
                         setState(() {
-                          _currentFilter = _currentFilter.copyWith(isCloseToWater: value);
+                          _currentFilter =
+                              _currentFilter.copyWith(isCloseToWater: value);
                         });
                       },
                     ),
@@ -151,7 +146,8 @@ class _CampsiteFilterBottomSheetState extends ConsumerState<CampsiteFilterBottom
                       value: _currentFilter.isCampFireAllowed,
                       onChanged: (value) {
                         setState(() {
-                          _currentFilter = _currentFilter.copyWith(isCampFireAllowed: value);
+                          _currentFilter =
+                              _currentFilter.copyWith(isCampFireAllowed: value);
                         });
                       },
                     ),
@@ -159,8 +155,6 @@ class _CampsiteFilterBottomSheetState extends ConsumerState<CampsiteFilterBottom
                   ],
                 ),
               ),
-              
-              
               Padding(
                 padding: const EdgeInsets.all(24),
                 child: SizedBox(
@@ -172,7 +166,8 @@ class _CampsiteFilterBottomSheetState extends ConsumerState<CampsiteFilterBottom
                     ),
                     child: const Text(
                       'Apply Filters',
-                      style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ),
@@ -188,8 +183,8 @@ class _CampsiteFilterBottomSheetState extends ConsumerState<CampsiteFilterBottom
     return Text(
       title,
       style: Theme.of(context).textTheme.titleMedium?.copyWith(
-        fontWeight: FontWeight.bold,
-      ),
+            fontWeight: FontWeight.bold,
+          ),
     );
   }
 

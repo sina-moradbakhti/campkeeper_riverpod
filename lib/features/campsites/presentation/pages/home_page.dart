@@ -22,7 +22,6 @@ class _HomePageState extends ConsumerState<HomePage>
     super.initState();
     _tabController = TabController(length: 2, vsync: this);
 
-    
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(campsiteNotifierProvider.notifier).loadCampsites();
     });
@@ -38,7 +37,6 @@ class _HomePageState extends ConsumerState<HomePage>
   Widget build(BuildContext context) {
     final filterState = ref.watch(campsiteFilterProvider);
 
-    
     ref.listen<CampsiteState>(campsiteNotifierProvider, (previous, next) {
       if (next is CampsiteLoaded && previous is! CampsiteLoaded) {
         ref

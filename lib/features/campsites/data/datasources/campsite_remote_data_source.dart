@@ -25,7 +25,8 @@ class CampsiteRemoteDataSourceImpl implements CampsiteRemoteDataSource {
             .map((json) => CampsiteModel.fromJson(json as Map<String, dynamic>))
             .toList();
       } else {
-        throw ServerException('Failed to load campsites: ${response.statusCode}');
+        throw ServerException(
+            'Failed to load campsites: ${response.statusCode}');
       }
     } on DioException catch (e) {
       if (e.type == DioExceptionType.connectionTimeout ||
