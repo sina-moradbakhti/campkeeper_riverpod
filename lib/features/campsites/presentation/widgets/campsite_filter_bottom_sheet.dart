@@ -251,7 +251,7 @@ class _CampsiteFilterBottomSheetState
             Switch(
               value: value ?? false,
               onChanged: (newValue) {
-                onChanged(newValue ? newValue : null);
+                onChanged(newValue);
               },
             ),
           ],
