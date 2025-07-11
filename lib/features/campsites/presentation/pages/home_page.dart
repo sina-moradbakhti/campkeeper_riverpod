@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import '../../domain/entities/campsite_filter.dart';
 import '../providers/campsite_providers.dart';
 import '../providers/campsite_notifier.dart';
 import '../widgets/campsite_list_view.dart';
@@ -38,11 +39,16 @@ class _HomePageState extends ConsumerState<HomePage>
     final filterState = ref.watch(campsiteFilterProvider);
 
     ref.listen<CampsiteState>(campsiteNotifierProvider, (previous, next) {
-      if (next is CampsiteLoaded && previous is! CampsiteLoaded) {
-        ref
-            .read(campsiteFilterProvider.notifier)
-            .updateAvailableOptions(next.campsites);
-      }
+      next.whenOrNull(
+        loaded: (campsites) {
+          final wasLoaded = previous?.whenOrNull(loaded: (_) => true) ?? false;
+          if (!wasLoaded) {
+            ref
+                .read(campsiteFilterProvider.notifier)
+                .updateAvailableOptions(campsites);
+          }
+        },
+      );
     });
 
     return Scaffold(

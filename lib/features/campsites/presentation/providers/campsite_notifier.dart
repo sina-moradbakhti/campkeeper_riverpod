@@ -1,96 +1,57 @@
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../domain/entities/campsite.dart';
 import '../../domain/entities/campsite_filter.dart';
 import '../../domain/usecases/get_campsites.dart';
 
-abstract class CampsiteState extends Equatable {
-  const CampsiteState();
+part 'campsite_notifier.freezed.dart';
 
-  @override
-  List<Object> get props => [];
-}
-
-class CampsiteInitial extends CampsiteState {}
-
-class CampsiteLoading extends CampsiteState {}
-
-class CampsiteLoaded extends CampsiteState {
-  final List<Campsite> campsites;
-
-  const CampsiteLoaded({
-    required this.campsites,
-  });
-
-  @override
-  List<Object> get props => [campsites];
-}
-
-class CampsiteError extends CampsiteState {
-  final String message;
-
-  const CampsiteError(this.message);
-
-  @override
-  List<Object> get props => [message];
+@freezed
+class CampsiteState with _$CampsiteState {
+  const factory CampsiteState.initial() = CampsiteInitial;
+  const factory CampsiteState.loading() = CampsiteLoading;
+  const factory CampsiteState.loaded({
+    required List<Campsite> campsites,
+  }) = CampsiteLoaded;
+  const factory CampsiteState.error(String message) = CampsiteError;
 }
 
 class CampsiteNotifier extends StateNotifier<CampsiteState> {
   final GetCampsites _getCampsites;
 
-  CampsiteNotifier(this._getCampsites) : super(CampsiteInitial());
+  CampsiteNotifier(this._getCampsites) : super(const CampsiteState.initial());
 
   Future<void> loadCampsites() async {
-    state = CampsiteLoading();
+    state = const CampsiteState.loading();
 
     final result = await _getCampsites();
 
     result.fold(
-      (failure) => state = CampsiteError(failure.toString()),
+      (failure) => state = CampsiteState.error(failure.toString()),
       (campsites) {
-        campsites.sort((a, b) => a.label.compareTo(b.label));
-        state = CampsiteLoaded(
-          campsites: campsites,
+        final updatedCampsites = campsites
+            .map((campsite) => campsite.copyWith(
+                  photo: campsite.photo.replaceFirst('http://', 'https://'),
+                ))
+            .toList();
+        updatedCampsites.sort((a, b) => a.label.compareTo(b.label));
+        state = CampsiteState.loaded(
+          campsites: updatedCampsites,
         );
       },
     );
   }
 }
 
-class CampsiteFilterState extends Equatable {
-  final CampsiteFilter filter;
-  final List<String> availableCountries;
-  final List<String> availableLanguages;
-  final double minPrice;
-  final double maxPrice;
-
-  const CampsiteFilterState({
-    required this.filter,
-    required this.availableCountries,
-    required this.availableLanguages,
-    required this.minPrice,
-    required this.maxPrice,
-  });
-
-  CampsiteFilterState copyWith({
-    CampsiteFilter? filter,
-    List<String>? availableCountries,
-    List<String>? availableLanguages,
-    double? minPrice,
-    double? maxPrice,
-  }) {
-    return CampsiteFilterState(
-      filter: filter ?? this.filter,
-      availableCountries: availableCountries ?? this.availableCountries,
-      availableLanguages: availableLanguages ?? this.availableLanguages,
-      minPrice: minPrice ?? this.minPrice,
-      maxPrice: maxPrice ?? this.maxPrice,
-    );
-  }
-
-  @override
-  List<Object> get props =>
-      [filter, availableCountries, availableLanguages, minPrice, maxPrice];
+@freezed
+class CampsiteFilterState with _$CampsiteFilterState {
+  const factory CampsiteFilterState({
+    required CampsiteFilter filter,
+    required List<String> availableCountries,
+    required List<String> availableLanguages,
+    required double minPrice,
+    required double maxPrice,
+  }) = _CampsiteFilterState;
 }
 
 class CampsiteFilterNotifier extends StateNotifier<CampsiteFilterState> {

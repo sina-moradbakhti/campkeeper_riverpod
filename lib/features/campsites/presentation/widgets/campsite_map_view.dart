@@ -6,7 +6,6 @@ import 'package:flutter_map_marker_cluster/flutter_map_marker_cluster.dart';
 import 'package:latlong2/latlong.dart';
 import '../../domain/entities/campsite.dart';
 import '../providers/campsite_providers.dart';
-import '../providers/campsite_notifier.dart';
 import '../pages/campsite_detail_page.dart';
 
 class CampsiteMapView extends ConsumerStatefulWidget {
@@ -24,35 +23,35 @@ class _CampsiteMapViewState extends ConsumerState<CampsiteMapView> {
     final campsiteState = ref.watch(campsiteNotifierProvider);
     final filteredCampsites = ref.watch(filteredCampsitesProvider);
 
-    if (campsiteState is CampsiteLoading) {
-      return const Center(child: CircularProgressIndicator());
-    } else if (campsiteState is CampsiteLoaded) {
-      if (filteredCampsites.isEmpty) {
-        return const Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.explore_off,
-                size: 64,
-                color: Colors.grey,
-              ),
-              SizedBox(height: 16),
-              Text(
-                'No campsites to show on map',
-                style: TextStyle(
-                  fontSize: 18,
+    return campsiteState.when(
+      initial: () => const Center(child: CircularProgressIndicator()),
+      loading: () => const Center(child: CircularProgressIndicator()),
+      loaded: (campsites) {
+        if (filteredCampsites.isEmpty) {
+          return const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.explore_off,
+                  size: 64,
                   color: Colors.grey,
                 ),
-              ),
-            ],
-          ),
-        );
-      }
-
-      return _buildMap(filteredCampsites);
-    } else if (campsiteState is CampsiteError) {
-      return Center(
+                SizedBox(height: 16),
+                Text(
+                  'No campsites to show on map',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+        return _buildMap(filteredCampsites);
+      },
+      error: (message) => Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -68,16 +67,14 @@ class _CampsiteMapViewState extends ConsumerState<CampsiteMapView> {
             ),
             const SizedBox(height: 8),
             Text(
-              campsiteState.message,
+              message,
               textAlign: TextAlign.center,
               style: const TextStyle(color: Colors.grey),
             ),
           ],
         ),
-      );
-    }
-
-    return const Center(child: CircularProgressIndicator());
+      ),
+    );
   }
 
   Widget _buildMap(List<Campsite> campsites) {

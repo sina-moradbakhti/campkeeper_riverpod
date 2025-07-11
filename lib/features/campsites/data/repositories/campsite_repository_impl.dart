@@ -20,7 +20,8 @@ class CampsiteRepositoryImpl implements CampsiteRepository {
     if (await networkInfo.isConnected) {
       try {
         final remoteCampsites = await remoteDataSource.getCampsites();
-        return Right(remoteCampsites);
+        final entities = remoteCampsites.map((model) => model.toEntity()).toList();
+        return Right(entities);
       } on ServerException catch (e) {
         return Left(ServerFailure(e.message));
       } on NetworkException catch (e) {

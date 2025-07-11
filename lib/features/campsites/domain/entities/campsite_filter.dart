@@ -1,36 +1,19 @@
-import 'package:equatable/equatable.dart';
+import 'package:freezed_annotation/freezed_annotation.dart';
 
-class CampsiteFilter extends Equatable {
-  final bool? isCloseToWater;
-  final bool? isCampFireAllowed;
-  final String? hostLanguage;
-  final double? minPrice;
-  final double? maxPrice;
+part 'campsite_filter.freezed.dart';
 
-  const CampsiteFilter({
-    this.isCloseToWater,
-    this.isCampFireAllowed,
-    this.hostLanguage,
-    this.minPrice,
-    this.maxPrice,
-  });
-
-  CampsiteFilter copyWith({
+@freezed
+class CampsiteFilter with _$CampsiteFilter {
+  const factory CampsiteFilter({
     bool? isCloseToWater,
     bool? isCampFireAllowed,
     String? hostLanguage,
     double? minPrice,
     double? maxPrice,
-  }) {
-    return CampsiteFilter(
-      isCloseToWater: isCloseToWater ?? this.isCloseToWater,
-      isCampFireAllowed: isCampFireAllowed ?? this.isCampFireAllowed,
-      hostLanguage: hostLanguage ?? this.hostLanguage,
-      minPrice: minPrice ?? this.minPrice,
-      maxPrice: maxPrice ?? this.maxPrice,
-    );
-  }
+  }) = _CampsiteFilter;
+}
 
+extension CampsiteFilterExtension on CampsiteFilter {
   CampsiteFilter clearFilter({
     bool clearCloseToWater = false,
     bool clearCampFireAllowed = false,
@@ -54,13 +37,4 @@ class CampsiteFilter extends Equatable {
         minPrice != null ||
         maxPrice != null;
   }
-
-  @override
-  List<Object?> get props => [
-        isCloseToWater,
-        isCampFireAllowed,
-        hostLanguage,
-        minPrice,
-        maxPrice,
-      ];
 }

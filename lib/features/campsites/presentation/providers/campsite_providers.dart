@@ -47,11 +47,12 @@ final filteredCampsitesProvider = Provider<List<Campsite>>((ref) {
   final campsiteState = ref.watch(campsiteNotifierProvider);
   final filterState = ref.watch(campsiteFilterProvider);
 
-  if (campsiteState is CampsiteLoaded) {
-    return _applyFilter(campsiteState.campsites, filterState.filter);
-  }
-
-  return [];
+  return campsiteState.when(
+    initial: () => [],
+    loading: () => [],
+    loaded: (campsites) => _applyFilter(campsites, filterState.filter),
+    error: (_) => [],
+  );
 });
 
 List<Campsite> _applyFilter(List<Campsite> campsites, CampsiteFilter filter) {

@@ -29,6 +29,7 @@ Map<String, dynamic> _$CampsiteModelToJson(CampsiteModel instance) =>
     <String, dynamic>{
       'id': instance.id,
       'label': instance.label,
+      'geoLocation': instance.geoLocationModel,
       'isCloseToWater': instance.isCloseToWater,
       'isCampFireAllowed': instance.isCampFireAllowed,
       'hostLanguages': instance.hostLanguages,
@@ -36,7 +37,6 @@ Map<String, dynamic> _$CampsiteModelToJson(CampsiteModel instance) =>
       'photo': instance.photo,
       'createdAt': instance.createdAt.toIso8601String(),
       'suitableFor': instance.suitableFor,
-      'geoLocation': instance.geoLocationModel,
     };
 
 GeoLocationModel _$GeoLocationModelFromJson(Map<String, dynamic> json) =>

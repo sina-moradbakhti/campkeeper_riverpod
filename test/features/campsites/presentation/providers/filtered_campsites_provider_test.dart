@@ -51,7 +51,7 @@ void main() {
     });
 
     test('should return all campsites when no filter is applied', () {
-      container.read(campsiteNotifierProvider.notifier).state = CampsiteLoaded(
+      container.read(campsiteNotifierProvider.notifier).state = CampsiteState.loaded(
         campsites: testCampsites,
       );
 
@@ -61,7 +61,7 @@ void main() {
     });
 
     test('should filter campsites by water proximity', () {
-      container.read(campsiteNotifierProvider.notifier).state = CampsiteLoaded(
+      container.read(campsiteNotifierProvider.notifier).state = CampsiteState.loaded(
         campsites: testCampsites,
       );
       container.read(campsiteFilterProvider.notifier).updateFilter(
@@ -75,7 +75,7 @@ void main() {
     });
 
     test('should filter campsites by campfire allowed', () {
-      container.read(campsiteNotifierProvider.notifier).state = CampsiteLoaded(
+      container.read(campsiteNotifierProvider.notifier).state = CampsiteState.loaded(
         campsites: testCampsites,
       );
       container.read(campsiteFilterProvider.notifier).updateFilter(
@@ -89,7 +89,7 @@ void main() {
     });
 
     test('should filter campsites by host language', () {
-      container.read(campsiteNotifierProvider.notifier).state = CampsiteLoaded(
+      container.read(campsiteNotifierProvider.notifier).state = CampsiteState.loaded(
         campsites: testCampsites,
       );
       container.read(campsiteFilterProvider.notifier).updateFilter(
@@ -103,7 +103,7 @@ void main() {
     });
 
     test('should filter campsites by price range', () {
-      container.read(campsiteNotifierProvider.notifier).state = CampsiteLoaded(
+      container.read(campsiteNotifierProvider.notifier).state = CampsiteState.loaded(
         campsites: testCampsites,
       );
       container.read(campsiteFilterProvider.notifier).updateFilter(
@@ -117,7 +117,7 @@ void main() {
     });
 
     test('should return empty list when no campsites match filter', () {
-      container.read(campsiteNotifierProvider.notifier).state = CampsiteLoaded(
+      container.read(campsiteNotifierProvider.notifier).state = CampsiteState.loaded(
         campsites: testCampsites,
       );
       container.read(campsiteFilterProvider.notifier).updateFilter(
@@ -130,7 +130,7 @@ void main() {
     });
 
     test('should apply multiple filters', () {
-      container.read(campsiteNotifierProvider.notifier).state = CampsiteLoaded(
+      container.read(campsiteNotifierProvider.notifier).state = CampsiteState.loaded(
         campsites: testCampsites,
       );
       container.read(campsiteFilterProvider.notifier).updateFilter(

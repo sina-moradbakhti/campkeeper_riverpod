@@ -5,22 +5,49 @@ import 'dart:math' as math;
 part 'campsite_model.g.dart';
 
 @JsonSerializable()
-class CampsiteModel extends Campsite {
+class CampsiteModel {
+  final String id;
+  final String label;
   @JsonKey(name: 'geoLocation')
   final GeoLocationModel geoLocationModel;
+  final bool isCloseToWater;
+  final bool isCampFireAllowed;
+  final List<String> hostLanguages;
+  final double pricePerNight;
+  final String photo;
+  final DateTime createdAt;
+  final List<String> suitableFor;
 
   const CampsiteModel({
-    required super.id,
-    required super.label,
+    required this.id,
+    required this.label,
     required this.geoLocationModel,
-    required super.isCloseToWater,
-    required super.isCampFireAllowed,
-    required super.hostLanguages,
-    required super.pricePerNight,
-    required super.photo,
-    required super.createdAt,
-    required super.suitableFor,
-  }) : super(geoLocation: geoLocationModel);
+    required this.isCloseToWater,
+    required this.isCampFireAllowed,
+    required this.hostLanguages,
+    required this.pricePerNight,
+    required this.photo,
+    required this.createdAt,
+    required this.suitableFor,
+  });
+
+  // Getter for backward compatibility with tests
+  GeoLocationModel get geoLocation => geoLocationModel;
+
+  Campsite toEntity() {
+    return Campsite(
+      id: id,
+      label: label,
+      geoLocation: geoLocationModel.toEntity(),
+      isCloseToWater: isCloseToWater,
+      isCampFireAllowed: isCampFireAllowed,
+      hostLanguages: hostLanguages,
+      pricePerNight: pricePerNight,
+      photo: photo,
+      createdAt: createdAt,
+      suitableFor: suitableFor,
+    );
+  }
 
   factory CampsiteModel.fromJson(Map<String, dynamic> json) {
     final geoLocationData = json['geoLocation'] as Map<String, dynamic>?;
@@ -78,11 +105,25 @@ class CampsiteModel extends Campsite {
 }
 
 @JsonSerializable()
-class GeoLocationModel extends GeoLocation {
+class GeoLocationModel {
+  final double lat;
+  final double long;
+
   const GeoLocationModel({
-    required super.lat,
-    required super.long,
+    required this.lat,
+    required this.long,
   });
+
+  // Getters for backward compatibility with tests
+  double get latitude => lat;
+  double get longitude => long;
+
+  GeoLocation toEntity() {
+    return GeoLocation(
+      lat: lat,
+      long: long,
+    );
+  }
 
   factory GeoLocationModel.fromJson(Map<String, dynamic> json) =>
       _$GeoLocationModelFromJson(json);

@@ -5,6 +5,7 @@ import 'package:dartz/dartz.dart';
 import 'package:campkeeper_riverpod/features/campsites/data/repositories/campsite_repository_impl.dart';
 import 'package:campkeeper_riverpod/features/campsites/data/datasources/campsite_remote_data_source.dart';
 import 'package:campkeeper_riverpod/features/campsites/data/models/campsite_model.dart';
+import 'package:campkeeper_riverpod/features/campsites/domain/entities/campsite.dart';
 import 'package:campkeeper_riverpod/core/network/network_info.dart';
 import 'package:campkeeper_riverpod/core/error/exceptions.dart';
 import 'package:campkeeper_riverpod/core/error/failures.dart';
@@ -66,7 +67,16 @@ void main() {
         final result = await repository.getCampsites();
 
         verify(mockRemoteDataSource.getCampsites());
-        expect(result, Right(tCampsiteModels));
+        result.fold(
+          (failure) => fail('Expected Right but got Left: $failure'),
+          (entities) {
+            expect(entities.length, 1);
+            expect(entities.first.id, '1');
+            expect(entities.first.label, 'Test Campsite');
+            expect(entities.first.isCloseToWater, true);
+            expect(entities.first.isCampFireAllowed, false);
+          },
+        );
       });
 
       test(

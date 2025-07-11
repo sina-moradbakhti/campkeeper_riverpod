@@ -19,8 +19,12 @@ void main() {
     suitableFor: const [],
   );
 
-  test('should be a subclass of Campsite entity', () async {
-    expect(tCampsiteModel, isA<Campsite>());
+  test('should be able to convert to Campsite entity', () async {
+    final entity = tCampsiteModel.toEntity();
+    expect(entity, isA<Campsite>());
+    expect(entity.id, tCampsiteModel.id);
+    expect(entity.label, tCampsiteModel.label);
+    expect(entity.isCloseToWater, tCampsiteModel.isCloseToWater);
   });
 
   group('fromJson', () {

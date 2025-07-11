@@ -51,8 +51,8 @@ void main() {
       when(mockGetCampsites()).thenAnswer((_) async => Right(tCampsites));
 
       final expected = [
-        CampsiteLoading(),
-        CampsiteLoaded(campsites: tCampsites),
+        const CampsiteState.loading(),
+        CampsiteState.loaded(campsites: tCampsites),
       ];
       expectLater(notifier.stream, emitsInOrder(expected));
 
@@ -64,8 +64,8 @@ void main() {
       when(mockGetCampsites()).thenAnswer((_) async => const Left(tFailure));
 
       final expected = [
-        CampsiteLoading(),
-        const CampsiteError('ServerFailure(Server error)'),
+        const CampsiteState.loading(),
+        const CampsiteState.error('ServerFailure(Server error)'),
       ];
       expectLater(notifier.stream, emitsInOrder(expected));
 
@@ -103,9 +103,15 @@ void main() {
 
       await notifier.loadCampsites();
 
-      final state = notifier.state as CampsiteLoaded;
-      expect(state.campsites.first.label, 'A Campsite');
-      expect(state.campsites.last.label, 'Z Campsite');
+      notifier.state.when(
+        initial: () => fail('Should not be initial'),
+        loading: () => fail('Should not be loading'),
+        loaded: (campsites) {
+          expect(campsites.first.label, 'A Campsite');
+          expect(campsites.last.label, 'Z Campsite');
+        },
+        error: (_) => fail('Should not be error'),
+      );
     });
   });
 }

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import '../providers/campsite_providers.dart';
-import '../providers/campsite_notifier.dart';
 import 'campsite_card.dart';
 import 'loading_shimmer.dart';
 
@@ -13,58 +12,59 @@ class CampsiteListView extends ConsumerWidget {
     final campsiteState = ref.watch(campsiteNotifierProvider);
     final filteredCampsites = ref.watch(filteredCampsitesProvider);
 
-    if (campsiteState is CampsiteLoading) {
-      return const LoadingShimmer();
-    } else if (campsiteState is CampsiteLoaded) {
-      if (filteredCampsites.isEmpty) {
-        return const Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Icon(
-                Icons.nature_people_outlined,
-                size: 64,
-                color: Colors.grey,
-              ),
-              SizedBox(height: 16),
-              Text(
-                'No campsites found',
-                style: TextStyle(
-                  fontSize: 18,
+    return campsiteState.when(
+      initial: () => const LoadingShimmer(),
+      loading: () => const LoadingShimmer(),
+      loaded: (campsites) {
+        if (filteredCampsites.isEmpty) {
+          return const Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.nature_people_outlined,
+                  size: 64,
                   color: Colors.grey,
                 ),
-              ),
-              SizedBox(height: 8),
-              Text(
-                'Try adjusting your filters',
-                style: TextStyle(
-                  fontSize: 14,
-                  color: Colors.grey,
+                SizedBox(height: 16),
+                Text(
+                  'No campsites found',
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Colors.grey,
+                  ),
                 ),
-              ),
-            ],
+                SizedBox(height: 8),
+                Text(
+                  'Try adjusting your filters',
+                  style: TextStyle(
+                    fontSize: 14,
+                    color: Colors.grey,
+                  ),
+                ),
+              ],
+            ),
+          );
+        }
+
+        return RefreshIndicator(
+          onRefresh: () async {
+            await ref.read(campsiteNotifierProvider.notifier).loadCampsites();
+          },
+          child: ListView.builder(
+            padding: const EdgeInsets.all(16),
+            itemCount: filteredCampsites.length,
+            itemBuilder: (context, index) {
+              final campsite = filteredCampsites[index];
+              return Padding(
+                padding: const EdgeInsets.only(bottom: 16),
+                child: CampsiteCard(campsite: campsite),
+              );
+            },
           ),
         );
-      }
-
-      return RefreshIndicator(
-        onRefresh: () async {
-          await ref.read(campsiteNotifierProvider.notifier).loadCampsites();
-        },
-        child: ListView.builder(
-          padding: const EdgeInsets.all(16),
-          itemCount: filteredCampsites.length,
-          itemBuilder: (context, index) {
-            final campsite = filteredCampsites[index];
-            return Padding(
-              padding: const EdgeInsets.only(bottom: 16),
-              child: CampsiteCard(campsite: campsite),
-            );
-          },
-        ),
-      );
-    } else if (campsiteState is CampsiteError) {
-      return Center(
+      },
+      error: (message) => Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
@@ -80,7 +80,7 @@ class CampsiteListView extends ConsumerWidget {
             ),
             const SizedBox(height: 8),
             Text(
-              campsiteState.message,
+              message,
               textAlign: TextAlign.center,
               style: const TextStyle(color: Colors.grey),
             ),
@@ -93,9 +93,7 @@ class CampsiteListView extends ConsumerWidget {
             ),
           ],
         ),
-      );
-    }
-
-    return const LoadingShimmer();
+      ),
+    );
   }
 }
