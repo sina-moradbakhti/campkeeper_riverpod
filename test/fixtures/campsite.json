@@ -1,0 +1,15 @@
+{
+  "id": "1",
+  "createdAt": "2022-09-11T14:25:09.496Z",
+  "label": "Beautiful Forest Campsite",
+  "photo": "https://example.com/photo.jpg",
+  "geoLocation": {
+    "lat": 52.5200,
+    "long": 13.4050
+  },
+  "isCloseToWater": true,
+  "isCampFireAllowed": false,
+  "hostLanguages": ["en", "de"],
+  "pricePerNight": 25.0,
+  "suitableFor": []
+}
