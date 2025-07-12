@@ -35,6 +35,10 @@ class CampsiteModel {
   GeoLocationModel get geoLocation => geoLocationModel;
 
   Campsite toEntity() {
+    final securePhoto = photo.startsWith('http://')
+        ? photo.replaceFirst('http://', 'https://')
+        : photo;
+
     return Campsite(
       id: id,
       label: label,
@@ -43,7 +47,7 @@ class CampsiteModel {
       isCampFireAllowed: isCampFireAllowed,
       hostLanguages: hostLanguages,
       pricePerNight: pricePerNight,
-      photo: photo,
+      photo: securePhoto,
       createdAt: createdAt,
       suitableFor: suitableFor,
     );

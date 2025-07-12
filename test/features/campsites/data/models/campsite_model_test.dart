@@ -27,6 +27,63 @@ void main() {
     expect(entity.isCloseToWater, tCampsiteModel.isCloseToWater);
   });
 
+  test('should convert HTTP to HTTPS when converting to entity', () async {
+    final modelWithHttp = CampsiteModel(
+      id: '1',
+      label: 'Test Campsite',
+      geoLocationModel: const GeoLocationModel(lat: 52.5200, long: 13.4050),
+      isCloseToWater: true,
+      isCampFireAllowed: false,
+      hostLanguages: const ['English'],
+      pricePerNight: 25.0,
+      photo: 'http://example.com/photo.jpg',
+      createdAt: DateTime.parse('2022-09-11T14:25:09.496Z'),
+      suitableFor: const [],
+    );
+
+    final entity = modelWithHttp.toEntity();
+    
+    expect(entity.photo, 'https://example.com/photo.jpg');
+  });
+
+  test('should keep HTTPS URLs unchanged when converting to entity', () async {
+    final modelWithHttps = CampsiteModel(
+      id: '1',
+      label: 'Test Campsite',
+      geoLocationModel: const GeoLocationModel(lat: 52.5200, long: 13.4050),
+      isCloseToWater: true,
+      isCampFireAllowed: false,
+      hostLanguages: const ['English'],
+      pricePerNight: 25.0,
+      photo: 'https://example.com/photo.jpg',
+      createdAt: DateTime.parse('2022-09-11T14:25:09.496Z'),
+      suitableFor: const [],
+    );
+
+    final entity = modelWithHttps.toEntity();
+    
+    expect(entity.photo, 'https://example.com/photo.jpg');
+  });
+
+  test('should handle non-HTTP URLs when converting to entity', () async {
+    final modelWithOtherUrl = CampsiteModel(
+      id: '1',
+      label: 'Test Campsite',
+      geoLocationModel: const GeoLocationModel(lat: 52.5200, long: 13.4050),
+      isCloseToWater: true,
+      isCampFireAllowed: false,
+      hostLanguages: const ['English'],
+      pricePerNight: 25.0,
+      photo: 'ftp://example.com/photo.jpg',
+      createdAt: DateTime.parse('2022-09-11T14:25:09.496Z'),
+      suitableFor: const [],
+    );
+
+    final entity = modelWithOtherUrl.toEntity();
+    
+    expect(entity.photo, 'ftp://example.com/photo.jpg');
+  });
+
   group('fromJson', () {
     test('should return a valid model when the JSON contains valid data', () async {
       final Map<String, dynamic> jsonMap = json.decode(fixture('campsite.json'));

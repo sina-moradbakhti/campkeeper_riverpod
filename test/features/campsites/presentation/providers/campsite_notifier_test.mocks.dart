@@ -3,16 +3,14 @@
 // Do not manually edit this file.
 
 // ignore_for_file: no_leading_underscores_for_library_prefixes
-import 'dart:async' as _i5;
+import 'dart:async' as _i4;
 
-import 'package:campkeeper_riverpod/core/error/failures.dart' as _i6;
+import 'package:campkeeper_riverpod/core/error/failures.dart' as _i5;
 import 'package:campkeeper_riverpod/features/campsites/domain/entities/campsite.dart'
-    as _i7;
-import 'package:campkeeper_riverpod/features/campsites/domain/repositories/campsite_repository.dart'
-    as _i2;
-import 'package:campkeeper_riverpod/features/campsites/domain/usecases/get_campsites.dart'
-    as _i4;
-import 'package:dartz/dartz.dart' as _i3;
+    as _i6;
+import 'package:campkeeper_riverpod/features/campsites/domain/usecases/get_sorted_campsites.dart'
+    as _i3;
+import 'package:dartz/dartz.dart' as _i2;
 import 'package:mockito/mockito.dart' as _i1;
 
 // ignore_for_file: type=lint
@@ -28,9 +26,8 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: camel_case_types
 // ignore_for_file: subtype_of_sealed_class
 
-class _FakeCampsiteRepository_0 extends _i1.SmartFake
-    implements _i2.CampsiteRepository {
-  _FakeCampsiteRepository_0(
+class _FakeEither_0<L, R> extends _i1.SmartFake implements _i2.Either<L, R> {
+  _FakeEither_0(
     Object parent,
     Invocation parentInvocation,
   ) : super(
@@ -39,48 +36,30 @@ class _FakeCampsiteRepository_0 extends _i1.SmartFake
         );
 }
 
-class _FakeEither_1<L, R> extends _i1.SmartFake implements _i3.Either<L, R> {
-  _FakeEither_1(
-    Object parent,
-    Invocation parentInvocation,
-  ) : super(
-          parent,
-          parentInvocation,
-        );
-}
-
-/// A class which mocks [GetCampsites].
+/// A class which mocks [GetSortedCampsites].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockGetCampsites extends _i1.Mock implements _i4.GetCampsites {
-  MockGetCampsites() {
+class MockGetSortedCampsites extends _i1.Mock
+    implements _i3.GetSortedCampsites {
+  MockGetSortedCampsites() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i2.CampsiteRepository get repository => (super.noSuchMethod(
-        Invocation.getter(#repository),
-        returnValue: _FakeCampsiteRepository_0(
-          this,
-          Invocation.getter(#repository),
-        ),
-      ) as _i2.CampsiteRepository);
-
-  @override
-  _i5.Future<_i3.Either<_i6.Failure, List<_i7.Campsite>>> call() =>
+  _i4.Future<_i2.Either<_i5.Failure, List<_i6.Campsite>>> call() =>
       (super.noSuchMethod(
         Invocation.method(
           #call,
           [],
         ),
         returnValue:
-            _i5.Future<_i3.Either<_i6.Failure, List<_i7.Campsite>>>.value(
-                _FakeEither_1<_i6.Failure, List<_i7.Campsite>>(
+            _i4.Future<_i2.Either<_i5.Failure, List<_i6.Campsite>>>.value(
+                _FakeEither_0<_i5.Failure, List<_i6.Campsite>>(
           this,
           Invocation.method(
             #call,
             [],
           ),
         )),
-      ) as _i5.Future<_i3.Either<_i6.Failure, List<_i7.Campsite>>>);
+      ) as _i4.Future<_i2.Either<_i5.Failure, List<_i6.Campsite>>>);
 }

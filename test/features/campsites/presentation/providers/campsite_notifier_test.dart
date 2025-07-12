@@ -3,20 +3,20 @@ import 'package:mockito/mockito.dart';
 import 'package:mockito/annotations.dart';
 import 'package:dartz/dartz.dart';
 import 'package:campkeeper_riverpod/features/campsites/presentation/providers/campsite_notifier.dart';
-import 'package:campkeeper_riverpod/features/campsites/domain/usecases/get_campsites.dart';
+import 'package:campkeeper_riverpod/features/campsites/domain/usecases/get_sorted_campsites.dart';
 import 'package:campkeeper_riverpod/features/campsites/domain/entities/campsite.dart';
 import 'package:campkeeper_riverpod/core/error/failures.dart';
 
 import 'campsite_notifier_test.mocks.dart';
 
-@GenerateMocks([GetCampsites])
+@GenerateMocks([GetSortedCampsites])
 void main() {
   late CampsiteNotifier notifier;
-  late MockGetCampsites mockGetCampsites;
+  late MockGetSortedCampsites mockGetSortedCampsites;
 
   setUp(() {
-    mockGetCampsites = MockGetCampsites();
-    notifier = CampsiteNotifier(mockGetCampsites);
+    mockGetSortedCampsites = MockGetSortedCampsites();
+    notifier = CampsiteNotifier(mockGetSortedCampsites);
   });
 
   final tCampsites = [
@@ -48,7 +48,7 @@ void main() {
 
   group('loadCampsites', () {
     test('should emit loading state then loaded state when data is gotten successfully', () async {
-      when(mockGetCampsites()).thenAnswer((_) async => Right(tCampsites));
+      when(mockGetSortedCampsites()).thenAnswer((_) async => Right(tCampsites));
 
       final expected = [
         const CampsiteState.loading(),
@@ -61,7 +61,7 @@ void main() {
 
     test('should emit loading state then error state when getting data fails', () async {
       const tFailure = ServerFailure('Server error');
-      when(mockGetCampsites()).thenAnswer((_) async => const Left(tFailure));
+      when(mockGetSortedCampsites()).thenAnswer((_) async => const Left(tFailure));
 
       final expected = [
         const CampsiteState.loading(),
@@ -72,20 +72,8 @@ void main() {
       await notifier.loadCampsites();
     });
 
-    test('should sort campsites by label', () async {
-      final unsortedCampsites = [
-        Campsite(
-          id: '2',
-          label: 'Z Campsite',
-          geoLocation: const GeoLocation(lat: 50.0, long: 10.0),
-          isCloseToWater: true,
-          isCampFireAllowed: false,
-          hostLanguages: const ['English'],
-          pricePerNight: 25.0,
-          photo: 'https://example.com/photo.jpg',
-          createdAt: DateTime.now(),
-          suitableFor: const [],
-        ),
+    test('should receive already sorted campsites from use case', () async {
+      final sortedCampsites = [
         Campsite(
           id: '1',
           label: 'A Campsite',
@@ -98,8 +86,20 @@ void main() {
           createdAt: DateTime.now(),
           suitableFor: const [],
         ),
+        Campsite(
+          id: '2',
+          label: 'Z Campsite',
+          geoLocation: const GeoLocation(lat: 50.0, long: 10.0),
+          isCloseToWater: true,
+          isCampFireAllowed: false,
+          hostLanguages: const ['English'],
+          pricePerNight: 25.0,
+          photo: 'https://example.com/photo.jpg',
+          createdAt: DateTime.now(),
+          suitableFor: const [],
+        ),
       ];
-      when(mockGetCampsites()).thenAnswer((_) async => Right(unsortedCampsites));
+      when(mockGetSortedCampsites()).thenAnswer((_) async => Right(sortedCampsites));
 
       await notifier.loadCampsites();
 

@@ -2,7 +2,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 import '../../domain/entities/campsite.dart';
 import '../../domain/entities/campsite_filter.dart';
-import '../../domain/usecases/get_campsites.dart';
+import '../../domain/usecases/get_sorted_campsites.dart';
 
 part 'campsite_notifier.freezed.dart';
 
@@ -17,28 +17,18 @@ class CampsiteState with _$CampsiteState {
 }
 
 class CampsiteNotifier extends StateNotifier<CampsiteState> {
-  final GetCampsites _getCampsites;
+  final GetSortedCampsites _getSortedCampsites;
 
-  CampsiteNotifier(this._getCampsites) : super(const CampsiteState.initial());
+  CampsiteNotifier(this._getSortedCampsites) : super(const CampsiteState.initial());
 
   Future<void> loadCampsites() async {
     state = const CampsiteState.loading();
 
-    final result = await _getCampsites();
+    final result = await _getSortedCampsites();
 
     result.fold(
       (failure) => state = CampsiteState.error(failure.toString()),
-      (campsites) {
-        final updatedCampsites = campsites
-            .map((campsite) => campsite.copyWith(
-                  photo: campsite.photo.replaceFirst('http://', 'https://'),
-                ))
-            .toList();
-        updatedCampsites.sort((a, b) => a.label.compareTo(b.label));
-        state = CampsiteState.loaded(
-          campsites: updatedCampsites,
-        );
-      },
+      (campsites) => state = CampsiteState.loaded(campsites: campsites),
     );
   }
 }

@@ -5,6 +5,7 @@ import '../../data/datasources/campsite_remote_data_source.dart';
 import '../../data/repositories/campsite_repository_impl.dart';
 import '../../domain/repositories/campsite_repository.dart';
 import '../../domain/usecases/get_campsites.dart';
+import '../../domain/usecases/get_sorted_campsites.dart';
 import '../../domain/entities/campsite.dart';
 import '../../domain/entities/campsite_filter.dart';
 import 'campsite_notifier.dart';
@@ -33,9 +34,13 @@ final getCampsitesUseCaseProvider = Provider<GetCampsites>((ref) {
   return GetCampsites(ref.watch(campsiteRepositoryProvider));
 });
 
+final getSortedCampsitesUseCaseProvider = Provider<GetSortedCampsites>((ref) {
+  return GetSortedCampsites(ref.watch(getCampsitesUseCaseProvider));
+});
+
 final campsiteNotifierProvider =
     StateNotifierProvider<CampsiteNotifier, CampsiteState>((ref) {
-  return CampsiteNotifier(ref.watch(getCampsitesUseCaseProvider));
+  return CampsiteNotifier(ref.watch(getSortedCampsitesUseCaseProvider));
 });
 
 final campsiteFilterProvider =
